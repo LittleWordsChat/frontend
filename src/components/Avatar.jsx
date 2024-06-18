@@ -1,7 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PiUserCircle } from "react-icons/pi";
 
 const Avatar = ({userId,name,imageUrl,width,height}) => {
+
+  const [color, setColor] = useState('');
+
+  useEffect(() => {
+    
+    if (!imageUrl) {
+
+      const bgColor = [
+        'bg-slate-200',
+        'bg-teal-200',
+        'bg-red-200',
+        'bg-green-200',
+        'bg-yellow-200',
+        'bg-gray-200',
+        "bg-cyan-200",
+        "bg-sky-200",
+        "bg-blue-200"
+      ]
+
+      const randomNumber = Math.floor(Math.random() * 9)
+
+      setColor(bgColor[randomNumber])
+
+    }
+  
+  }, [imageUrl, setColor]);
+  
     
     //const onlineUser = useSelector(state => state?.user?.onlineUser)
 
@@ -16,20 +43,7 @@ const Avatar = ({userId,name,imageUrl,width,height}) => {
         avatarName = splitName[0][0]
       }
     }
-
-    const bgColor = [
-      'bg-slate-200',
-      'bg-teal-200',
-      'bg-red-200',
-      'bg-green-200',
-      'bg-yellow-200',
-      'bg-gray-200',
-      "bg-cyan-200",
-      "bg-sky-200",
-      "bg-blue-200"
-    ]
-
-    const randomNumber = Math.floor(Math.random() * 9)
+    
 
     //const isOnline = onlineUser.includes(userId)
   return (
@@ -45,7 +59,7 @@ const Avatar = ({userId,name,imageUrl,width,height}) => {
                 />
             ) : (
                 name ? (
-                    <div  style={{width : width+"px", height : height+"px" }} className={`overflow-hidden rounded-full flex justify-center items-center text-lg ${bgColor[randomNumber]}`}>
+                    <div  style={{width : width+"px", height : height+"px" }} className={`overflow-hidden rounded-full flex justify-center items-center text-lg ${color}`}>
                         {avatarName}
                     </div>
                 ) :(

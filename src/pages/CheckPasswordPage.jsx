@@ -3,22 +3,28 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import toast from 'react-hot-toast';
 import Avatar from '../components/Avatar';
+import { setToken } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
+
+
 
 const CheckPasswordPage = () => {
+
   const [data, setData] = useState({
     password : "",
     userId : ""
   })
 
-  const navigate = useNavigate()
-  const location = useLocation()
-  //const dispatch = useDispatch()
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(()=>{
     if(!location?.state?.name){
       navigate('/email')
     }
-  },[])
+  }, [location, navigate])
 
   const handleOnChange = (e)=>{
     const { name, value } = e.target
@@ -51,8 +57,8 @@ const CheckPasswordPage = () => {
     toast.success(response.data.message)
 
     if(response.data.success){
-      //dispatch(setToken(response?.data?.token))
-      //localStorage.setItem('token',response?.data?.token)
+      dispatch(setToken(response?.data?.data?.access_token))
+      localStorage.setItem('token',response?.data?.data?.access_token)
 
       setData({
         password : "",
