@@ -37,32 +37,38 @@ const Avatar = ({ userId, name, imageUrl, width, height }) => {
     }
   }
 
-  const isOnline = onlineUser.includes(userId)
+  const isOnline = onlineUser.includes(userId);
+
   return (
     <div
-      className={`text-slate-800  rounded-full font-bold relative overflow-hidden`}
+      className={`relative`}
       style={{ width: width + "px", height: height + "px" }}
     >
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          width={width}
-          height={height}
-          alt={name}
-          className="overflow-hidden rounded-full"
-        />
-      ) : name ? (
-        <div
-          style={{ width: width + "px", height: height + "px" }}
-          className={`overflow-hidden rounded-full flex justify-center items-center text-lg ${color}`}
-        >
-          {avatarName}
-        </div>
-      ) : (
-        <PiUserCircle size={width} />
-      )}
+      <div
+        className={`text-slate-800 rounded-full font-bold overflow-hidden`}
+        style={{ width: width + "px", height: height + "px" }}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            width={width}
+            height={height}
+            alt={name}
+            className="object-cover rounded-full"
+          />
+        ) : name ? (
+          <div
+            style={{ width: width + "px", height: height + "px" }}
+            className={`overflow-hidden rounded-full flex justify-center items-center text-lg ${color}`}
+          >
+            {avatarName}
+          </div>
+        ) : (
+          <PiUserCircle size={width} />
+        )}
+      </div>
       {isOnline && (
-        <div className="bg-green-600 p-1 absolute bottom-2 -right-1 z-10 rounded-full"></div>
+        <div className="bg-green-600 w-3 h-3 absolute bottom-0 right-0 z-10 rounded-full border-2 border-white"></div>
       )}
     </div>
   );

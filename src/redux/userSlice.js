@@ -6,6 +6,7 @@ const initialState = {
   email: "",
   profile_pic: "",
   token: "",
+  isAuthenticated: false,
   onlineUser: [],
   socketConnection: null,
 };
@@ -22,6 +23,7 @@ export const userSlice = createSlice({
     },
 
     setToken: (state, action) => {
+      state.isAuthenticated = true;
       state.token = action.payload;
     },
 
@@ -31,6 +33,7 @@ export const userSlice = createSlice({
       state.email = "";
       state.profile_pic = "";
       state.token = "";
+      state.isAuthenticated = false;
       state.socketConnection = null;
     },
     setOnlineUser: (state, action) => {

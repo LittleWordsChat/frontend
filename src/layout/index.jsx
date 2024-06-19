@@ -1,22 +1,22 @@
-import React from 'react'
-import logo from '../assets/Logo.png'
+import React from "react";
+import logo from "../assets/Logo.png";
 
-const AuthLayouts = ({children}) => {
+const AuthLayouts = ({ children }) => {
   return (
     <>
-        <header className='flex justify-center items-center h-auto py-3 pb-3 shadow-md bg-primary'>
-            <img
-              className="rounded-lg"
-              src={logo}
-              alt='logo'
-              width={400}
-              height={100}
-            />
-        </header>
+      <header className="flex justify-center items-center h-auto py-3 pb-3 shadow-md bg-primary">
+        <img
+          className="rounded-lg"
+          src={logo}
+          alt="logo"
+          width={400}
+          height={100}
+        />
+      </header>
 
-        { children }
+      {children}
     </>
-  )
-}
+  );
+};
 
-export default AuthLayouts
+export default AuthLayouts;
