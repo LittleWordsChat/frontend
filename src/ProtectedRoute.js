@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  if (!isAuthenticated) return <Navigate to="/email" />;
+  if (!isAuthenticated && !localStorage.getItem('token')) return <Navigate to="/email" />;
   return children;
 };
 
