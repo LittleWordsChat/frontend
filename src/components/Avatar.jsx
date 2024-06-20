@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const Avatar = ({ userId, name, imageUrl, width, height }) => {
   const [color, setColor] = useState("");
-  const onlineUser = useSelector((state) => state?.user?.onlineUser);
+  const onlineUser = useSelector((state) => state?.chat?.onlineUser);
   useEffect(() => {
     if (!imageUrl) {
       const bgColor = [

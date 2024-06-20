@@ -12,11 +12,13 @@ import SearchUser from "./SearchUser";
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from "../redux/userSlice";
+import { emitSidebar } from "../redux/chatSlice.js";
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  const [allUser, setAllUser] = useState([]);
+  const allUser = useSelector((state) => state?.chat?.allUser)
+  /* const [allUser, setAllUser] = useState([]); */
   const [openSearchUser, setOpenSearchUser] = useState(false);
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
@@ -25,32 +27,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (socketConnection) {
-      socketConnection.emit("sidebar", user._id);
-      socketConnection.on("conversation", (data) => {
-        const conversationUserData = data.map((conversationUser, index) => {
-          if (
-            conversationUser?.sender?._id === conversationUser?.receiver?._id
-          ) {
-            return {
-              ...conversationUser,
-              userDetails: conversationUser?.sender,
-            };
-          } else if (conversationUser?.receiver?._id !== user?._id) {
-            return {
-              ...conversationUser,
-              userDetails: conversationUser.receiver,
-            };
-          } else {
-            return {
-              ...conversationUser,
-              userDetails: conversationUser.sender,
-            };
-          }
-        });
-        setAllUser(conversationUserData);
-      });
-    }
+    dispatch(emitSidebar());
   }, [socketConnection, user]);
 
   const handleLogout = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Avatar from "./Avatar";
 import { HiDotsVertical } from "react-icons/hi";
@@ -13,20 +13,16 @@ import Loading from "./Loading";
 import backgroundImage from "../assets/wallapaper.jpeg";
 import { IoMdSend } from "react-icons/io";
 import moment from "moment";
+import { emitMessagePage, emitNewMessage, emitSeen } from "../redux/chatSlice";
 
 const MessagePage = () => {
   const params = useParams();
-  const socketConnection = useSelector(
-    (state) => state?.user?.socketConnection
-  );
+  const dispatch = useDispatch();
   const user = useSelector((state) => state?.user);
-  const [dataUser, setDataUser] = useState({
-    name: "",
-    email: "",
-    profile_pic: "",
-    online: false,
-    _id: "",
-  });
+  const dataUser = useSelector((state) => state?.chat?.dataUser);
+  const allMessage = useSelector((state) => state?.chat?.allMessage);
+  const isConnected = useSelector((state) => state?.chat?.connected);
+
   const [openImageVideoUpload, setOpenImageVideoUpload] = useState(false);
   const [message, setMessage] = useState({
     text: "",
@@ -34,7 +30,6 @@ const MessagePage = () => {
     videoUrl: "",
   });
   const [loading, setLoading] = useState(false);
-  const [allMessage, setAllMessage] = useState([]);
   const currentMessage = useRef(null);
 
   useEffect(() => {
@@ -99,20 +94,9 @@ const MessagePage = () => {
   };
 
   useEffect(() => {
-    if (socketConnection) {
-      socketConnection.emit("message-page", params.userId);
-
-      socketConnection.emit("seen", params.userId);
-
-      socketConnection.on("message-user", (data) => {
-        setDataUser(data);
-      });
-
-      socketConnection.on("message", (data) => {
-        setAllMessage(data);
-      });
-    }
-  }, [socketConnection, params?.userId, user]);
+    dispatch(emitMessagePage(params.userId));
+    dispatch(emitSeen(params.userId));
+  }, [dispatch, params?.userId, user]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -129,15 +113,17 @@ const MessagePage = () => {
     e.preventDefault();
 
     if (message.text || message.imageUrl || message.videoUrl) {
-      if (socketConnection) {
-        socketConnection.emit("new-message", {
-          sender: user?._id,
-          receiver: params.userId,
-          text: message.text,
-          imageUrl: message.imageUrl,
-          videoUrl: message.videoUrl,
-          msgByUserId: user?._id,
-        });
+      if (isConnected) {
+        dispatch(
+          emitNewMessage({
+            sender: user?._id,
+            receiver: params.userId,
+            text: message.text,
+            imageUrl: message.imageUrl,
+            videoUrl: message.videoUrl,
+            msgByUserId: user?._id,
+          })
+        );
         setMessage({
           text: "",
           imageUrl: "",
@@ -194,6 +180,7 @@ const MessagePage = () => {
           {allMessage.map((msg, index) => {
             return (
               <div
+                key={index}
                 className={` p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
                   user._id === msg?.msgByUserId
                     ? "ml-auto bg-teal-100"

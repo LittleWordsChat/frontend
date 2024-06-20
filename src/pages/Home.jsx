@@ -11,9 +11,15 @@ import useAxios from "../useAxios";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/Logo.png";
 import io from "socket.io-client";
+import {
+  setupSocketListeners,
+  socketConnect,
+  socketDisconnect,
+} from "../redux/chatSlice";
 
 const Home = () => {
   const user = useSelector((state) => state.user);
+  const isConnected = useSelector((state) => state.chat.connected);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,28 +42,17 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
-      auth: {
-        token: localStorage.getItem("token"),
-      },
-    });
+    const connectSocket = () => {
+      dispatch(socketConnect());
+      dispatch(setupSocketListeners());
+    };
 
-    socketConnection.on("onlineUsers", (data) => {
-      dispatch(setOnlineUser(data));
-    });
-
-    socketConnection.on("auth-error", (data) => {
-      dispatch(logout());
-      localStorage.clear();
-      navigate("/email");
-    });
-
-    dispatch(setSocketConnection(socketConnection));
+    connectSocket();
 
     return () => {
-      socketConnection.disconnect();
+      //dispatch(socketDisconnect());
     };
-  }, [dispatch]);
+  }, [dispatch, isConnected]);
 
   const basePath = location.pathname === "/";
 
