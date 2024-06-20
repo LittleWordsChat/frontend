@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import {
   socketConnected,
   setOnlineUser,
@@ -14,7 +13,6 @@ const socketMiddleware = (store) => {
   let socketFactory;
   let socket;
   return (next) => (action) => {
-    const user = store.getState().user;
     switch (action.type) {
       case "chat/socketConnect":
         socketFactory = SocketFactory.create();
@@ -45,7 +43,7 @@ const socketMiddleware = (store) => {
                   ...conversationUser,
                   userDetails: conversationUser?.sender,
                 };
-              } else if (conversationUser?.receiver?._id !== user?._id) {
+              } else if (conversationUser?.receiver?._id !== store.getState().user._id) {
                 return {
                   ...conversationUser,
                   userDetails: conversationUser.receiver,
@@ -69,7 +67,7 @@ const socketMiddleware = (store) => {
         break;
       case "chat/emitSidebar":
         if (socket) {
-          socket.emit("sidebar", user._id);
+          socket.emit("sidebar", action.payload);
         }
         break;
       case "chat/emitMessagePage":

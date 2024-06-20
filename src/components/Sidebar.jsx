@@ -17,18 +17,15 @@ import { emitSidebar } from "../redux/chatSlice.js";
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  const allUser = useSelector((state) => state?.chat?.allUser)
+  const allUser = useSelector((state) => state?.chat?.allUser);
   /* const [allUser, setAllUser] = useState([]); */
   const [openSearchUser, setOpenSearchUser] = useState(false);
-  const socketConnection = useSelector(
-    (state) => state?.user?.socketConnection
-  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(emitSidebar());
-  }, [socketConnection, user]);
+    dispatch(emitSidebar(user._id));
+  }, [user]);
 
   const handleLogout = () => {
     dispatch(logout());

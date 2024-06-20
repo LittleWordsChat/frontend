@@ -56,9 +56,9 @@ const SearchUser = ({ onClose }) => {
           )}
 
           {loading && (
-            <p>
+            <div>
               <Loading />
-            </p>
+            </div>
           )}
 
           {searchUser.length !== 0 &&

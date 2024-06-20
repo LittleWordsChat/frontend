@@ -1,45 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import {
-  logout,
-  setOnlineUser,
-  setSocketConnection,
-  setUser,
-} from "../redux/userSlice";
+import { logout, setUser } from "../redux/userSlice";
 import useAxios from "../useAxios";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/Logo.png";
-import io from "socket.io-client";
-import {
-  setupSocketListeners,
-  socketConnect,
-  socketDisconnect,
-} from "../redux/chatSlice";
+import { setupSocketListeners, socketConnect } from "../redux/chatSlice";
 
 const Home = () => {
-  const user = useSelector((state) => state.user);
+  useSelector((state) => state.user);
   const isConnected = useSelector((state) => state.chat.connected);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const api = useAxios();
 
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     try {
       const response = await api.get("/user-details");
       dispatch(setUser(response.data));
-
       if (response.data.logout) {
         dispatch(logout());
         navigate("/email");
       }
     } catch (error) {}
-  };
+  }, [dispatch, navigate, api]);
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [fetchUserDetails]);
 
   useEffect(() => {
     const connectSocket = () => {
