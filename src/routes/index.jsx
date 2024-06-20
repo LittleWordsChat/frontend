@@ -65,7 +65,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: ":userId",
-            element: <MessagePage />,
+            element: (
+              <ProtectedRoute>
+                <MessagePage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },

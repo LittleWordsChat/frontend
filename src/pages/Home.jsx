@@ -1,19 +1,39 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   logout,
   setOnlineUser,
   setSocketConnection,
+  setUser,
 } from "../redux/userSlice";
+import useAxios from "../useAxios";
 import Sidebar from "../components/Sidebar";
 import logo from "../assets/Logo.png";
 import io from "socket.io-client";
 
 const Home = () => {
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const api = useAxios();
+
+  const fetchUserDetails = async () => {
+    try {
+      const response = await api.get("/user-details");
+      dispatch(setUser(response.data));
+
+      if (response.data.logout) {
+        dispatch(logout());
+        navigate("/email");
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   useEffect(() => {
     const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
@@ -37,7 +57,7 @@ const Home = () => {
     return () => {
       socketConnection.disconnect();
     };
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   const basePath = location.pathname === "/";
 
