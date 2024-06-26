@@ -11,9 +11,10 @@ import uploadFile from "../helpers/uploadFile";
 import { IoClose } from "react-icons/io5";
 import Loading from "./Loading";
 import backgroundImage from "../assets/wallapaper.jpeg";
-import { IoMdSend } from "react-icons/io";
+import { IoMdSend, IoIosHappy } from "react-icons/io";
 import moment from "moment";
 import { emitMessagePage, emitNewMessage, emitSeen } from "../redux/chatSlice";
+import EmojiPicker from "emoji-picker-react";
 
 const MessagePage = () => {
   const params = useParams();
@@ -23,6 +24,7 @@ const MessagePage = () => {
   const allMessage = useSelector((state) => state?.chat?.allMessage);
   const isConnected = useSelector((state) => state?.chat?.connected);
 
+  const [open, setOpen] = useState(false);
   const [openImageVideoUpload, setOpenImageVideoUpload] = useState(false);
   const [message, setMessage] = useState({
     text: "",
@@ -92,6 +94,15 @@ const MessagePage = () => {
       };
     });
   };
+
+  const handleEmoji =(e) => {
+    setMessage((preve) => {
+      return {
+        text: preve.text + e.emoji
+      };
+    });
+    setOpen (false)
+  }
 
   useEffect(() => {
     dispatch(emitMessagePage(params.userId));
@@ -318,6 +329,16 @@ const MessagePage = () => {
             value={message.text}
             onChange={handleOnChange}
           />
+          <div className="relative top-4 right-3 text-primary">
+          <button 
+            onClick={() => setOpen((prev) => !prev)}            
+          >
+            <IoIosHappy size={28} />
+          </button>
+          <div className="absolute bottom-16 right-0 w-50 h-50 rounded-full" >
+              <EmojiPicker open={open} onEmojiClick={handleEmoji}/>
+          </div>       
+          </div>
           <button className="text-primary hover:text-secondary">
             <IoMdSend size={28} />
           </button>
