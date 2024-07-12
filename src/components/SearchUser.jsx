@@ -49,7 +49,7 @@ const SearchUser = ({ onClose }) => {
         </div>
 
         {/**display search user */}
-        <div className="bg-white mt-2 w-full p-4 rounded">
+        <div className="bg-white mt-2 w-full p-4 rounded overflow-y-auto max-h-[610px]">
           {/**no user found */}
           {searchUser.length === 0 && !loading && (
             <p className="text-center text-slate-500">no user found!</p>

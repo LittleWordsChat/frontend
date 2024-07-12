@@ -95,13 +95,13 @@ const MessagePage = () => {
     });
   };
 
-  const handleEmoji =(e) => {
+  const handleEmoji = (e) => {
     setMessage((preve) => {
       return {
         text: preve.text + e.emoji
       };
     });
-    setOpen (false)
+    setOpen(false)
   }
 
   useEffect(() => {
@@ -192,11 +192,10 @@ const MessagePage = () => {
             return (
               <div
                 key={index}
-                className={` p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
-                  user._id === msg?.msgByUserId
+                className={` p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${user._id === msg?.msgByUserId
                     ? "ml-auto bg-teal-100"
                     : "bg-white"
-                }`}
+                  }`}
               >
                 <div className="w-full relative">
                   {msg?.imageUrl && (
@@ -330,14 +329,14 @@ const MessagePage = () => {
             onChange={handleOnChange}
           />
           <div className="relative top-4 right-3 text-primary">
-          <button 
-            onClick={() => setOpen((prev) => !prev)}            
-          >
-            <IoIosHappy size={28} />
-          </button>
-          <div className="absolute bottom-16 right-0 w-50 h-50 rounded-full" >
-              <EmojiPicker open={open} onEmojiClick={handleEmoji}/>
-          </div>       
+            <button
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              <IoIosHappy size={28} />
+            </button>
+            <div className="absolute bottom-16 right-0 w-50 h-50 rounded-full" >
+              <EmojiPicker open={open} onEmojiClick={handleEmoji} />
+            </div>
           </div>
           <button className="text-primary hover:text-secondary">
             <IoMdSend size={28} />
